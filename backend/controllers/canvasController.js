@@ -172,8 +172,18 @@ exports.exportToPDF = (req, res) => {
     return res.status(400).json({ message: "Canvas not initialized" });
 
   const imgBuffer = canvasInstance.toBuffer("image/png");
+  const PDFDocument = require("pdfkit");
   const doc = new PDFDocument({ autoFirstPage: false });
-  const tempPath = path.join(__dirname, "../temp/output.pdf");
+
+  // Define the temp folder path relative to this file
+  const tempDir = path.join(__dirname, "../temp");
+  const tempPath = path.join(tempDir, "output.pdf");
+
+  // Create temp folder if it doesn't exist
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
+
   const stream = fs.createWriteStream(tempPath);
 
   doc.pipe(stream);
@@ -194,8 +204,14 @@ exports.exportToPDF = (req, res) => {
       if (err) {
         console.error("Error sending file:", err);
       }
+      // Clean up the temp PDF after sending
       fs.unlink(tempPath, () => {});
     });
+  });
+
+  stream.on("error", (err) => {
+    console.error("Error writing PDF file:", err);
+    res.status(500).json({ message: "Failed to write PDF file", error: err.message });
   });
 };
 
