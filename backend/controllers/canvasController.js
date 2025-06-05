@@ -129,8 +129,9 @@ exports.addText = (req, res) => {
   redoStack = [];
 
   context.fillStyle = color || "black";
-  context.font = `${fontSize || "16px"} ${font || "Arial"}`;
-  context.fillText(text, x, y);
+context.font = `${(fontSize || 16)}px ${font || "Arial"}`;
+context.fillText(text, x, y);
+
 
   res.status(200).json({ message: "Text added to canvas" });
 };
