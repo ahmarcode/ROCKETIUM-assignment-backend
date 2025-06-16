@@ -129,7 +129,7 @@ exports.addText = (req, res) => {
   redoStack = [];
 
   context.fillStyle = color || "black";
-context.font = `${(fontSize || 16)}px ${font || "Arial"} border-color:black border-radius:10px`};
+context.font = `${(fontSize || 16)}px ${font || "Arial"} border-color:black border-radius:10px`;
 context.fillText(text, x, y);
 
 
